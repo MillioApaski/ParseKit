@@ -91,7 +91,19 @@ function createTreeNode(entry, depth = 0) {
   const value = document.createElement('span');
   value.className = 'tree-value ' + (entry.kind === 'string' || entry.kind === 'text' || entry.kind === 'attribute' ? 'tree-string' : entry.kind === 'number' ? 'tree-number' : entry.kind === 'null' ? 'tree-null' : '');
   value.textContent = nodeCaption(entry);
-  row.append(toggle, path, kind, value); host.append(row);
+  row.append(toggle, path, kind, value);
+  if (entry.format === 'json') {
+    const go = document.createElement('button');
+    go.className = 'tree-jump'; go.type = 'button'; go.textContent = '查询 ↗';
+    go.title = '在路径查询中查看这个节点';
+    go.addEventListener('click', () => {
+      $('query-path').value = entry.path;
+      $('query-source').value = $('tree-source').value;
+      selectView('query');
+    });
+    row.append(go);
+  }
+  host.append(row);
   let expanded = false;
   let branch = null;
   function open() {
@@ -269,7 +281,7 @@ function runDiff() {
 let currentView = 'format';
 function selectView(name) {
   currentView = name;
-  for (const target of ['format', 'tree', 'diff']) {
+  for (const target of ['format', 'tree', 'query', 'diff']) {
     $(target + '-workspace').hidden = target !== name;
   }
   document.querySelectorAll('.tab').forEach(button => {
@@ -279,6 +291,7 @@ function selectView(name) {
     else button.removeAttribute('aria-current');
   });
   if (name === 'tree') renderTree();
+  if (name === 'query' && $('query-path').value.trim() && querySourceText().trim()) runPathQuery();
   if (name === 'diff') {
     if (!$('diff-left').value && input.value) $('diff-left').value = input.value;
     if (!$('diff-right').value && output.value) $('diff-right').value = output.value;

@@ -56,3 +56,20 @@
 .tree-match:hover{background:#355179}
 .pane.drop-target{border-color:#77c6fd;box-shadow:0 0 0 3px #6caeff33,inset 0 0 0 1px #6caeff}
 @media(max-width:760px){.search-box{width:min(240px,55vw)}}
+
+/* V4 JSON path explorer */
+.query-field{flex:1;min-width:240px}
+.query-path-input{width:100%;min-width:200px;font-family:"Cascadia Code",Consolas,monospace}
+.query-examples{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:-3px 0 14px;color:#8f9db2;font-size:12px}
+.query-examples button{font-family:"Cascadia Code",Consolas,monospace;color:#b3cdfa;padding:6px 9px;background:#202a39}
+.query-pane{min-height:clamp(380px,59vh,780px)}
+.query-results{overflow:auto;flex:1;padding:16px}
+.query-match{border:1px solid #344052;border-radius:10px;margin-bottom:12px;background:#1e2530;overflow:hidden}
+.query-match-heading{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid #303b4b}
+.query-match-heading code{color:#b5d1ff;font:12px/1.5 "Cascadia Code",Consolas,monospace;overflow-wrap:anywhere}
+.query-match-actions{display:flex;flex-wrap:wrap;gap:7px;margin-left:auto}
+.query-match-actions button{padding:6px 9px}
+.query-preview{padding:12px 14px;margin:0;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;max-height:260px;color:#b3dfc3;font:12px/1.7 "Cascadia Code",Consolas,monospace}
+.tree-jump{border:0;background:none;color:#7188a6;padding:2px 6px;font-size:11px;white-space:nowrap}
+.tree-jump:hover{color:#b4d0ff;border:0;background:#2a3a50}
+@media(max-width:760px){.query-field{flex-basis:100%;min-width:0}.query-path-input{min-width:0;width:100%}.query-match-actions{margin-left:0}}

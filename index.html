@@ -12,6 +12,7 @@
   <script src="inspector.js" defer></script>
   <script src="editor.js" defer></script>
   <script src="workspace.js" defer></script>
+  <script src="query.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -23,6 +24,7 @@
     <nav class="tabs" aria-label="工作模式">
       <button class="tab active" data-view="format" aria-current="page">⌘ 格式化</button>
       <button class="tab" data-view="tree">◇ 结构视图</button>
+      <button class="tab" data-view="query">⌕ 路径查询</button>
       <button class="tab" data-view="diff">⇄ 差异比较</button>
     </nav>
     <section id="format-workspace">
@@ -51,6 +53,18 @@
         <button id="tree-expand">展开前两层</button><button id="tree-collapse">全部折叠</button>
       </div>
       <div class="pane inspector-pane"><div class="pane-head"><span><span class="indicator green"></span> TREE <small id="tree-summary">等待数据</small></span><span class="counter" id="tree-type"></span></div><div id="tree-search-results" class="tree-search-results" hidden></div><div id="tree-content" class="tree-content empty-state">在「格式化」模式粘贴 JSON 或 XML，然后切换到这里。</div></div>
+    </section>
+    <section id="query-workspace" hidden>
+      <div class="toolbar">
+        <label>数据来源 <select id="query-source"><option value="input">原始输入</option><option value="output">格式化输出</option><option value="diff-left">Diff 旧数据</option><option value="diff-right">Diff 新数据</option></select></label>
+        <label class="query-field">JSON 路径 <input id="query-path" class="search-box query-path-input" spellcheck="false" autocomplete="off" placeholder='$.operations[*].content["0x0001"]' aria-label="JSON 查询路径"></label>
+        <button id="query-run" class="primary">查询 ↵</button>
+        <span class="toolbar-spacer"></span>
+        <button id="query-copy-all">复制全部结果</button><button id="query-to-output">全部送到输出</button>
+      </div>
+      <div class="query-examples"><span>示例：</span><button data-query-example="$.operations[0]">$.operations[0]</button><button data-query-example='$..uuid'>$..uuid</button><button data-query-example='$.operations[*].content["0x0001"]'>$.operations[*].content["0x0001"]</button></div>
+      <div class="pane query-pane"><div class="pane-head"><span><span class="indicator green"></span> QUERY RESULTS <small id="query-summary">等待查询</small></span><span class="counter">JSON · 本地执行</span></div><div id="query-results" class="query-results"><p class="empty-state">输入 JSON 路径，按 Enter 查询。可从结构树点击「查询」自动填入路径。</p></div></div>
+      <p class="footnote">支持 $.字段、[0]、["任意字段名"]、* 和 ..字段；不支持脚本表达式或完整 JSONPath 过滤器。最多返回 200 项，最多检查 30,000 个节点。</p>
     </section>
     <section id="diff-workspace" hidden>
       <div class="toolbar">
