@@ -58,14 +58,33 @@ function prettyXML(doc, indent, source) {
   const content = nodes.map(node => render(node, 0)).join('\n');
   return declaration && !content.startsWith(declaration) ? declaration + '\n' + content : content;
 }
+function describeJSONError(error, source) {
+  // JSON SyntaxError messages differ among browser engines.
+  const positional = /position\s+(\d+)/i.exec(error.message);
+  let position = positional ? Math.min(source.length, Number(positional[1])) : null;
+  if (position === null) {
+    const coordinates = /line\s+(\d+)\s+column\s+(\d+)/i.exec(error.message);
+    if (coordinates) {
+      const line = Number(coordinates[1]), column = Number(coordinates[2]);
+      const lines = source.split('\n');
+      position = lines.slice(0, line - 1).reduce((sum, value) => sum + value.length + 1, 0) + column - 1;
+      position = Math.min(source.length, Math.max(0, position));
+    } else if (/end of (?:JSON )?input|unterminated string/i.test(error.message)) {
+      position = source.length;
+    }
+  }
+  if (position === null) return null;
+  const before = source.slice(0, position).split('\n');
+  return { position, line: before.length, column: before[before.length - 1].length + 1 };
+}
 function run(mode) {
-  const source = input.value.trim();
-  if (!source) { output.value = ''; updateCounts(); setStatus('请先粘贴 JSON 或 XML', true); return; }
+  const raw = input.value;
+  const source = typeOf(raw) === 'json' ? raw : raw.trim();
+  if (!raw.trim()) { output.value = ''; updateCounts(); setStatus('请先粘贴 JSON 或 XML', true); return; }
   const type = typeOf(source);
   try {
     if (type === 'json') {
-      const data = JSON.parse(source);
-      output.value = JSON.stringify(data, null, mode === 'minify' ? undefined : getIndent());
+      output.value = formatJSONLossless(source, getIndent(), mode === 'minify');
     } else {
       const doc = parseXML(source);
       output.value = mode === 'minify' ? new XMLSerializer().serializeToString(doc) : prettyXML(doc, getIndent(), source);
@@ -74,7 +93,12 @@ function run(mode) {
     $('meta').textContent = type.toUpperCase() + ' · ' + output.value.split('\n').length.toLocaleString() + ' 行';
   } catch (e) {
     output.value = '';
-    setStatus(e.message, true);
+    const location = type === 'json' ? describeJSONError(e, source) : null;
+    setStatus((location ? '第 ' + location.line + ' 行，第 ' + location.column + ' 列：' : '') + e.message, true);
+    if (location) {
+      input.focus();
+      input.setSelectionRange(location.position, Math.min(source.length, location.position + 1));
+    }
     $('meta').textContent = type.toUpperCase() + ' · 校验失败';
   }
   updateCounts();

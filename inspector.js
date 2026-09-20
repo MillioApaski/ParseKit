@@ -3,12 +3,14 @@
 const treeContent = $('tree-content');
 const diffContent = $('diff-content');
 let treeRoot = null;
+let treeEntry = null;
 let lastDiff = [];
 const own = (value, key) => Object.prototype.hasOwnProperty.call(value, key);
-const jsonKind = value => value === null ? 'null' : Array.isArray(value) ? 'array' : typeof value;
+const jsonKind = value => value instanceof RawJSONNumber ? 'number' : value === null ? 'null' : Array.isArray(value) ? 'array' : typeof value;
 const preview = (value, max = 180) => {
   let text;
-  if (typeof value === 'string') text = JSON.stringify(value);
+  if (value instanceof RawJSONNumber) text = value.raw;
+  else if (typeof value === 'string') text = JSON.stringify(value);
   else if (value === undefined) text = '(不存在)';
   else if (value !== null && typeof value === 'object') text = Array.isArray(value) ? 'Array(' + value.length + ')' : 'Object(' + Object.keys(value).length + ')';
   else text = String(value);
@@ -33,7 +35,7 @@ async function copyText(text) {
   if (!ok) throw Error('浏览器拒绝自动复制');
 }
 function jsonChildren(value, path) {
-  if (!value || typeof value !== 'object') return [];
+  if (!value || typeof value !== 'object' || value instanceof RawJSONNumber) return [];
   return Object.keys(value).map(key => ({
     key, path: Array.isArray(value) ? path + '[' + key + ']' : path + quoteKey(key),
     value: value[key], kind: jsonKind(value[key]), format: 'json'
@@ -119,14 +121,15 @@ function createTreeNode(entry, depth = 0) {
 function renderTree() {
   const source = $('tree-source').value === 'output' ? output.value : input.value;
   if (!source.trim()) {
-    treeRoot = null; message(treeContent, '当前数据来源为空。先粘贴数据，或切换数据来源。');
+    $('tree-search-results').hidden = true;
+    treeRoot = null; treeEntry = null; message(treeContent, '当前数据来源为空。先粘贴数据，或切换数据来源。');
     $('tree-summary').textContent = '等待数据'; $('tree-type').textContent = ''; return;
   }
   try {
     const type = typeOf(source);
     let entry;
     if (type === 'json') {
-      const value = JSON.parse(source);
+      const value = parseJSONLossless(source);
       entry = { key: '$', path: '$', value, kind: jsonKind(value), format: 'json' };
     } else {
       const xml = parseXML(source);
@@ -134,14 +137,17 @@ function renderTree() {
         path: '/' + xml.documentElement.nodeName + '[1]',
         value: xml.documentElement, kind: 'element', format: 'xml' };
     }
+    treeEntry = entry;
     treeRoot = createTreeNode(entry);
     treeContent.replaceChildren(treeRoot);
     treeRoot.openBranch();
     $('tree-summary').textContent = '点击字段名复制路径';
     $('tree-type').textContent = type.toUpperCase();
     setStatus('结构视图加载完成 · ' + type.toUpperCase());
+    searchTree();
   } catch (e) {
-    treeRoot = null; message(treeContent, '无法解析数据：' + e.message);
+    $('tree-search-results').hidden = true;
+    treeRoot = null; treeEntry = null; message(treeContent, '无法解析数据：' + e.message);
     $('tree-summary').textContent = '校验失败'; $('tree-type').textContent = '';
     setStatus(e.message, true);
   }
@@ -160,7 +166,7 @@ function closeAll(node) {
   [...descendants].reverse().forEach(child => child.closeBranch?.());
   node.closeBranch?.();
 }
-const isObject = x => x !== null && typeof x === 'object';
+const isObject = x => x !== null && typeof x === 'object' && !(x instanceof RawJSONNumber);
 function diffJSON(before, after) {
   const changes = [];
   let count = 0, clipped = false;
@@ -180,7 +186,7 @@ function diffJSON(before, after) {
         else if (!own(b, key)) changes.push({ kind: 'removed', path: next, before: a[key], after: undefined });
         else visit(a[key], b[key], next, depth + 1);
       }
-    } else if (!Object.is(a, b)) changes.push({ kind: 'changed', path, before: a, after: b });
+    } else if (!(a instanceof RawJSONNumber && b instanceof RawJSONNumber ? a.raw === b.raw : Object.is(a, b))) changes.push({ kind: 'changed', path, before: a, after: b });
   };
   visit(before, after, '$');
   return { changes, clipped };
@@ -243,7 +249,7 @@ function runDiff() {
   try {
     let result;
     if (type === 'json') {
-      result = diffJSON(JSON.parse(before), JSON.parse(after));
+      result = diffJSON(parseJSONLossless(before), parseJSONLossless(after));
     } else {
       const a = prettyXML(parseXML(before), getIndent(), before);
       const b = prettyXML(parseXML(after), getIndent(), after);
@@ -302,3 +308,49 @@ document.addEventListener('keydown', e => {
     e.preventDefault(); e.stopImmediatePropagation(); runDiff();
   }
 }, true);
+
+const MAX_SEARCH_VISITS = 30000;
+function searchTree() {
+  const query = $('tree-query').value.trim().toLocaleLowerCase();
+  const results = $('tree-search-results');
+  results.replaceChildren();
+  results.hidden = !query || !treeEntry;
+  if (results.hidden) return;
+  const stack = [treeEntry];
+  let visits = 0, found = 0;
+  while (stack.length && visits < MAX_SEARCH_VISITS && found < 100) {
+    const entry = stack.pop();
+    visits++;
+    const label = (entry.key + ' ' + entry.path + ' ' + nodeCaption(entry)).toLocaleLowerCase();
+    if (label.includes(query)) {
+      found++;
+      const button = document.createElement('button');
+      button.className = 'tree-match';
+      button.type = 'button';
+      button.textContent = entry.path + ' · ' + nodeCaption(entry);
+      button.title = '复制路径：' + entry.path;
+      button.addEventListener('click', async () => {
+        try { await copyText(entry.path); setStatus('已复制路径 ' + entry.path); }
+        catch (error) { setStatus(error.message, true); }
+      });
+      results.append(button);
+    }
+    const children = nodeChildren(entry);
+    for (let i = children.length - 1; i >= 0; i--) stack.push(children[i]);
+  }
+  if (!found) {
+    const empty = document.createElement('span');
+    empty.textContent = '未找到匹配字段'; results.append(empty);
+  }
+  if (stack.length) {
+    const hint = document.createElement('span');
+    hint.textContent = '结果已达上限或扫描超过 ' + MAX_SEARCH_VISITS + ' 个节点，请缩小关键词范围。';
+    results.append(hint);
+  }
+  $('tree-summary').textContent = found + ' 项匹配 · 点击结果复制路径';
+}
+let treeSearchTimer;
+$('tree-query').addEventListener('input', () => {
+  clearTimeout(treeSearchTimer);
+  treeSearchTimer = setTimeout(searchTree, 180);
+});
