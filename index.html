@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#11151c">
+  <meta name="description" content="完全本地运行的 JSON / XML 格式化、校验和对比工具">
+  <title>ParseKit · JSON / XML</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="logo">{ }</span><div><strong>ParseKit</strong><small>JSON & XML workspace</small></div></div>
+    <div class="privacy"><span class="dot"></span> 纯本地处理 · 不上传数据</div>
+  </header>
+  <main>
+    <div class="heading"><div><h1>让结构化数据更好读。</h1><p>粘贴报文，格式化、校验、压缩、复制。无需登录，也无需把工作数据交给别人。</p></div><span class="shortcut">Ctrl / ⌘ + Enter 格式化</span></div>
+    <div class="toolbar" aria-label="数据操作">
+      <label>类型 <select id="type"><option value="auto">自动识别</option><option value="json">JSON</option><option value="xml">XML</option></select></label>
+      <label>缩进 <select id="indent"><option value="2">2 空格</option><option value="4">4 空格</option><option value="tab">Tab</option></select></label>
+      <span class="toolbar-spacer"></span>
+      <button id="format" class="primary">格式化 <span>↵</span></button>
+      <button id="minify">压缩</button>
+      <button id="copy">复制结果</button>
+      <button id="swap" title="将输出放回输入区">结果转输入</button>
+      <button id="clear" class="quiet">清空</button>
+    </div>
+    <div class="editors">
+      <section class="pane"><div class="pane-head"><span><span class="indicator blue"></span> INPUT <small>原始数据</small></span><span class="counter" id="input-count">0 字符</span></div><textarea id="input" aria-label="输入 JSON 或 XML" spellcheck="false" placeholder='在这里粘贴 JSON 或 XML…\n\n例如：{"cluster":"0xFC02","content":{"0x0001":false}}'></textarea></section>
+      <section class="pane"><div class="pane-head"><span><span class="indicator green"></span> OUTPUT <small>处理结果</small></span><span class="counter" id="output-count">0 字符</span></div><textarea id="output" aria-label="处理后的结果" spellcheck="false" readonly placeholder="格式化后的内容会显示在这里…"></textarea></section>
+    </div>
+    <div class="statusbar"><div id="status" role="status" aria-live="polite">● 准备就绪</div><div id="meta">本地浏览器 · 无依赖</div></div>
+    <p class="footnote">提示：XML 默认保守处理空白与混合内容，不应将重新序列化后的 XML 用于数字签名验证。JSON 超出 JavaScript 安全整数范围时，格式化可能损失精度。</p>
+  </main>
+</body>
+</html>
