@@ -6,6 +6,7 @@ const status = $('status');
 const getIndent = () => $('indent').value === 'tab' ? '\t' : ' '.repeat(Number($('indent').value));
 const typeOf = text => $('type').value === 'auto' ? (text.trimStart().startsWith('<') ? 'xml' : 'json') : $('type').value;
 function updateCounts() {
+  document.dispatchEvent(new Event('parsekit:updated'));
   $('input-count').textContent = input.value.length.toLocaleString() + ' 字符';
   $('output-count').textContent = output.value.length.toLocaleString() + ' 字符';
 }

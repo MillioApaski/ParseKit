@@ -1,1 +1,49 @@
 :root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color-scheme:dark;background:#101319;color:#e8edf5;font-synthesis:none}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse 70% 35% at 50% -10%,#25304b 0%,transparent 80%),#101319}.topbar{height:70px;padding:0 max(28px,calc((100vw - 1500px)/2));display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #282e3a;background:#12161ce8}.brand{display:flex;align-items:center;gap:13px}.brand strong{display:block;font-size:16px;letter-spacing:-.3px}.brand small{display:block;margin-top:3px;color:#8c98ac;font-size:11px}.logo{display:grid;place-items:center;width:40px;height:40px;border-radius:11px;background:#273b68;color:#a9c4ff;font-size:16px;font-weight:800}.privacy{font-size:12px;color:#a9b5c8}.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#66dca5;box-shadow:0 0 10px #66dca560;margin-right:5px}main{max-width:1556px;margin:auto;padding:35px 28px}.heading{display:flex;justify-content:space-between;align-items:end;gap:16px;margin:0 0 28px}.heading h1{font-size:clamp(23px,3vw,34px);letter-spacing:-.9px;margin:0 0 9px;font-weight:690}.heading p{color:#929db0;font-size:13px;margin:0}.shortcut{color:#8793a6;font-size:12px;border:1px solid #303747;padding:8px 10px;border-radius:7px;white-space:nowrap}.toolbar{display:flex;align-items:center;gap:9px;margin-bottom:14px;flex-wrap:wrap}.toolbar label{display:flex;align-items:center;gap:9px;color:#97a3b7;font-size:12px;margin-right:8px}.toolbar-spacer{flex:1}button,select{background:#252b36;color:#dce4f3;border:1px solid #343d4b;border-radius:8px;padding:10px 13px;font:inherit;font-size:12px;cursor:pointer;transition:background .15s,border-color .15s}button:hover,select:hover{background:#323b4c;border-color:#51617b}button:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #81a8ff;outline-offset:2px}button.primary{background:#446de1;border-color:#597ff1;color:white;font-weight:650}button.primary:hover{background:#5680ef}.primary span{opacity:.6;margin-left:7px}.quiet{color:#9ea9ba}.editors{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;height:clamp(380px,63vh,850px)}.pane{min-width:0;min-height:0;overflow:hidden;border:1px solid #303746;background:#181d25;border-radius:12px;display:flex;flex-direction:column;box-shadow:0 12px 40px #0002}.pane-head{height:49px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 17px;border-bottom:1px solid #303746;font-size:11px;font-weight:750;letter-spacing:1px;color:#e3e9f5}.pane-head small{font-weight:400;letter-spacing:0;margin-left:8px;color:#788599}.indicator{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:7px}.blue{background:#7a9dff}.green{background:#67d9a9}.counter{font-size:11px;font-weight:400;letter-spacing:0;color:#7f8da2}textarea{display:block;flex:1;width:100%;min-height:0;padding:19px 20px;border:0;resize:none;background:transparent;color:#d9e7f5;outline:none;font:13px/1.7 "Cascadia Code","JetBrains Mono",Consolas,monospace;tab-size:2}textarea::placeholder{color:#647186}.statusbar{display:flex;justify-content:space-between;gap:12px;padding:16px 2px;color:#8491a7;font-size:12px}#status.ok{color:#73d5a4}#status.error{color:#ff9090}.footnote{color:#69778d;font-size:11px;line-height:1.7;margin:11px 2px}@media(max-width:760px){.topbar{padding:0 17px}.privacy{font-size:0}.privacy .dot{font-size:12px}main{padding:25px 14px}.heading{display:block}.shortcut{display:none}.toolbar-spacer{flex-basis:100%;height:0}.editors{grid-template-columns:1fr;grid-template-rows:1fr 1fr;height:75vh;min-height:510px}.footnote{padding-bottom:12px}}
+
+/* v2: tabbed workspace, code editor, tree inspector, structural diff */
+[hidden]{display:none!important}
+.tabs{display:flex;gap:5px;padding:5px;margin:0 0 19px;border:1px solid #303746;border-radius:10px;background:#171c25;width:max-content;max-width:100%}
+.tab{border:none;background:transparent;color:#8997ae;font-weight:600;padding:11px 19px}
+.tab:hover{background:#273143;color:#eff4fe;border:0}
+.tab.active{color:#eef4ff;background:#31466e;border:0;box-shadow:0 2px 8px #0002}
+.section-hint{font-size:12px;color:#a4b1c4}
+.inspector-pane{min-height:clamp(400px,65vh,850px)}
+.tree-content{padding:18px 20px;overflow:auto;flex:1;font:13px/1.7 "Cascadia Code",Consolas,monospace}
+.empty-state{color:#79889e;font-family:inherit}
+.tree-row{display:flex;align-items:flex-start;gap:7px;padding:3px 6px;border-radius:6px;min-width:max-content}
+.tree-row:hover{background:#ffffff0a}
+.tree-toggle{width:19px;min-width:19px;padding:0;align-self:start;border:0;background:transparent;color:#9aaed2;font:14px/24px Consolas,monospace}
+.tree-toggle:disabled{opacity:.15;cursor:default}
+.tree-path{border:0;background:none;color:#83b0fa;font:inherit;padding:0;white-space:nowrap}
+.tree-path:hover{color:#bfd4ff;text-decoration:underline;border:0;background:none}
+.tree-value{white-space:pre;max-width:840px;overflow:hidden;text-overflow:ellipsis;color:#d6e0ee}
+.tree-key{color:#b5c8fa}.tree-string{color:#8cd6af}.tree-number{color:#f1c27b}.tree-null{color:#bd9cdd}.tree-type{color:#8995a9;font-size:11px}
+.tree-children{border-left:1px solid #334051;margin-left:15px;padding-left:7px}
+.tree-notice{font-size:12px;color:#e1b986;padding:8px}
+.diff-results{margin-top:14px;min-height:190px;max-height:460px}
+.diff-results .pane-head button{padding:6px 10px}
+.compare-editors{height:clamp(260px,43vh,620px)}
+.diff-content{overflow:auto;flex:1;padding:12px 16px}
+.diff-row{display:grid;grid-template-columns:minmax(200px,32%) minmax(0,1fr) minmax(0,1fr);gap:10px;padding:10px 11px;border-bottom:1px solid #2c3644;font:12px/1.6 "Cascadia Code",Consolas,monospace;align-items:start}
+.diff-row:last-child{border-bottom:0}
+.diff-row .diff-path{word-break:break-all;color:#abc7ff}
+.diff-value{overflow-wrap:anywhere;white-space:pre-wrap;max-height:7em;overflow:hidden}
+.diff-added{border-left:3px solid #59c69c;background:#244c3b26}.diff-removed{border-left:3px solid #ed8d92;background:#6b323226}.diff-changed{border-left:3px solid #eabf78;background:#6c502526}
+.diff-before{color:#eaa0a0}.diff-after{color:#96e5bb}.diff-caption{font:11px/1.5 system-ui,sans-serif;color:#8799b0;display:block;margin-bottom:3px}
+.diff-empty{padding:28px;color:#a4b1c4}
+.editor-wrap{position:relative;display:flex;flex:1;min-height:0;min-width:0}
+.editor-wrap textarea{flex:1}
+.editor-wrap.enhanced .line-gutter{flex:0 0 48px;overflow:hidden;background:#151b24;border-right:1px solid #2b3545;color:#65748a;text-align:right;user-select:none}
+.editor-wrap.enhanced .line-numbers{white-space:pre;padding:19px 9px 19px 0;font:13px/1.7 "Cascadia Code","JetBrains Mono",Consolas,monospace;will-change:transform}
+.editor-wrap.enhanced .code-stage{position:relative;flex:1;min-width:0;overflow:hidden}
+.editor-wrap.enhanced .code-highlight{position:absolute;inset:0;margin:0;padding:19px 20px;white-space:pre;font:13px/1.7 "Cascadia Code","JetBrains Mono",Consolas,monospace;color:#d9e7f5;pointer-events:none;overflow:visible;will-change:transform;tab-size:2}
+.editor-wrap.enhanced textarea{position:absolute;inset:0;width:100%;height:100%;z-index:1;color:transparent;caret-color:#e8f0ff;background:transparent}
+.editor-wrap.enhanced textarea::selection{background:#526bacaa;color:#fff}
+.editor-wrap.enhanced textarea::placeholder{color:#647186}
+.syntax-key{color:#a4bffc}.syntax-string{color:#8ed5ac}.syntax-number{color:#e6c088}.syntax-keyword{color:#d5a1ef}.syntax-punct{color:#8fa8ca}.syntax-tag{color:#a6bfff}.syntax-attr{color:#e4bd83}.syntax-comment{color:#7b899d}
+@media(max-width:760px){.tabs{width:100%;overflow:auto}.tab{flex:1;white-space:nowrap;padding:10px}.section-hint{width:100%}.diff-row{grid-template-columns:1fr}.compare-editors{height:65vh;min-height:420px}.inspector-pane{min-height:65vh}}
+
+/* Prevent editor collapse when highlighting is disabled for huge inputs. */
+.editor-wrap.large .line-gutter{display:none}
+.editor-wrap.large .code-stage{flex:1;min-width:0;display:flex}
+.editor-wrap.large textarea{position:static;color:#d9e7f5;caret-color:#e8f0ff;height:100%;min-height:0;flex:1}
