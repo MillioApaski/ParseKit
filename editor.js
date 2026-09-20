@@ -81,14 +81,6 @@ for (const wrapper of document.querySelectorAll('[data-editor]')) {
   };
   textarea.addEventListener('scroll', sync, { passive: true });
   textarea.addEventListener('input', state.update);
-  textarea.addEventListener('keydown', event => {
-    if (event.key !== 'Tab' || textarea.readOnly || event.ctrlKey || event.metaKey || event.altKey) return;
-    event.preventDefault();
-    const start = textarea.selectionStart, end = textarea.selectionEnd;
-    const tab = $('indent').value === 'tab' ? '\t' : ' '.repeat(Number($('indent').value));
-    textarea.setRangeText(tab, start, end, 'end');
-    textarea.dispatchEvent(new Event('input', { bubbles: true }));
-  });
   state.update();
 }
 document.addEventListener('parsekit:updated', () => editors.forEach(state => state.update()));

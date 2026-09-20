@@ -73,3 +73,11 @@
 .tree-jump{border:0;background:none;color:#7188a6;padding:2px 6px;font-size:11px;white-space:nowrap}
 .tree-jump:hover{color:#b4d0ff;border:0;background:#2a3a50}
 @media(max-width:760px){.query-field{flex-basis:100%;min-width:0}.query-path-input{min-width:0;width:100%}.query-match-actions{margin-left:0}}
+
+/* V5 smart editor completion */
+.editor-wrap .editor-completion{position:absolute;z-index:10;display:flex;flex-direction:column;min-width:175px;max-width:min(340px,calc(100% - 10px));max-height:190px;overflow-y:auto;padding:5px;background:#212b3a;border:1px solid #536886;border-radius:9px;box-shadow:0 12px 30px #0009}
+.editor-wrap .editor-completion[hidden]{display:none!important}
+.editor-wrap .completion-option{display:block;width:100%;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:7px 10px;color:#c5d7f4;border:0;border-radius:5px;background:transparent;font:12px/1.4 "Cascadia Code","JetBrains Mono",Consolas,monospace}
+.editor-wrap .completion-option:hover,.editor-wrap .completion-option.selected{background:#3b5275;color:#fff}
+.editor-wrap.enhanced textarea{white-space:pre;overflow-wrap:normal}
+.editor-wrap.large textarea{white-space:pre;overflow-wrap:normal}
