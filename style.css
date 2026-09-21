@@ -121,3 +121,51 @@
   #format-workspace .toolbar > button{flex:0 0 auto;width:auto;min-width:0}
   #format-workspace .toolbar select{max-width:46vw}
 }
+
+
+/* Compact, unified select groups: label + value share one control surface. */
+#format-workspace .toolbar .control-group {
+  gap:0;
+  height:var(--toolbar-control-height);
+  margin-right:4px;
+  padding:0;
+  overflow:hidden;
+  border:1px solid #343d4b;
+  border-radius:var(--toolbar-control-radius);
+  background:#252b36;
+  transition:background .15s,border-color .15s;
+}
+#format-workspace .toolbar .control-group:hover {
+  background:#323b4c;
+  border-color:#51617b;
+}
+#format-workspace .toolbar .control-group:focus-within {
+  outline:2px solid #81a8ff;
+  outline-offset:2px;
+}
+#format-workspace .toolbar .control-label {
+  display:inline-flex;
+  align-items:center;
+  height:100%;
+  padding:0 10px 0 12px;
+  border-right:1px solid #3c4554;
+  color:#98a9c1;
+  font-size:12px;
+  line-height:1;
+}
+#format-workspace .toolbar label > select {
+  height:100%;
+  width:auto;
+  min-width:0;
+  padding:0 10px;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  color:#e8edf5;
+}
+#format-workspace .toolbar label > select:hover,
+#format-workspace .toolbar label > select:focus-visible {
+  border:0;
+  background:transparent;
+  outline:0;
+}
