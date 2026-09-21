@@ -83,48 +83,41 @@
 .editor-wrap.large textarea{white-space:pre;overflow-wrap:normal}
 
 
-/* Toolbar consistency: one sizing system for tabs, selects and main actions. */
-:root{--toolbar-control-height:44px;--toolbar-control-radius:9px}
-.tabs{gap:6px;padding:5px}
+/* Compact controls: consistent height, content-driven width. */
+:root{--toolbar-control-height:36px;--toolbar-control-radius:8px}
+.tabs{gap:4px;padding:4px}
 .tabs .tab{
   display:inline-flex;align-items:center;justify-content:center;
-  height:var(--toolbar-control-height);min-width:118px;
-  padding:0 16px;border-radius:var(--toolbar-control-radius);
-  font-size:13px;line-height:1.2;white-space:nowrap;
+  height:var(--toolbar-control-height);min-width:0;
+  padding:0 12px;border-radius:var(--toolbar-control-radius);
+  font-size:12px;line-height:1.2;white-space:nowrap;
 }
-#format-workspace .toolbar{gap:10px;align-items:center}
+#format-workspace .toolbar{gap:8px;align-items:center}
 #format-workspace .toolbar label{
-  display:inline-flex;align-items:center;gap:9px;
-  height:var(--toolbar-control-height);margin-right:0;
-  font-size:13px;white-space:nowrap;
+  display:inline-flex;align-items:center;gap:8px;
+  height:var(--toolbar-control-height);margin-right:4px;
+  font-size:12px;white-space:nowrap;
 }
 #format-workspace .toolbar select,
 #format-workspace .toolbar > button{
   box-sizing:border-box;height:var(--toolbar-control-height);
   border-radius:var(--toolbar-control-radius);
-  font-size:13px;line-height:1.2;white-space:nowrap;
+  font-size:12px;line-height:1.2;white-space:nowrap;
 }
-#format-workspace .toolbar select{padding:0 13px}
-#type{min-width:120px}
-#indent{min-width:104px}
+#format-workspace .toolbar select{padding:0 10px;min-width:0;width:auto}
 #format-workspace .toolbar > button{
   display:inline-flex;align-items:center;justify-content:center;
-  flex:0 0 108px;width:108px;min-width:108px;padding:0 10px;
+  flex:0 0 auto;width:auto;min-width:0;padding:0 12px;
 }
 #format-workspace .toolbar > button.primary{font-weight:650}
 .heading .shortcut{
   display:inline-flex;align-items:center;justify-content:center;
-  height:var(--toolbar-control-height);padding:0 13px;
+  height:var(--toolbar-control-height);padding:0 11px;
   border-radius:var(--toolbar-control-radius);line-height:1.2;
 }
-@media(max-width:1200px){
-  #format-workspace .toolbar-spacer{flex-basis:100%;height:0}
-}
 @media(max-width:760px){
-  .tabs .tab{min-width:104px;padding:0 12px}
-  #format-workspace .toolbar > button{
-    flex:1 1 calc(50% - 10px);width:auto;min-width:0;
-  }
-  #format-workspace .toolbar label{flex:0 1 auto}
+  .tabs .tab{min-width:0;padding:0 10px}
+  #format-workspace .toolbar-spacer{flex-basis:100%;height:0}
+  #format-workspace .toolbar > button{flex:0 0 auto;width:auto;min-width:0}
   #format-workspace .toolbar select{max-width:46vw}
 }
