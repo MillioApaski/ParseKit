@@ -48,8 +48,8 @@
     <section id="tree-workspace" hidden>
       <div class="toolbar">
         <span class="section-hint">查看输入或格式化结果的结构，展开节点后点击路径复制</span><span class="toolbar-spacer"></span>
-        <label>数据来源 <select id="tree-source"><option value="input">输入</option><option value="output">输出</option></select></label>
-        <label>搜索 <input type="search" id="tree-query" class="search-box" placeholder="字段名 / 路径 / 值" aria-label="搜索结构树"></label>
+        <label class="control-group"><span class="control-label">数据来源</span><select id="tree-source"><option value="input">输入</option><option value="output">输出</option></select></label>
+        <label class="control-group search-group"><span class="control-label">搜索</span><input type="search" id="tree-query" class="search-box" placeholder="字段名 / 路径 / 值" aria-label="搜索结构树"></label>
         <button id="tree-refresh" class="primary">刷新结构</button>
         <button id="tree-expand">展开前两层</button><button id="tree-collapse">全部折叠</button>
       </div>
@@ -57,8 +57,8 @@
     </section>
     <section id="query-workspace" hidden>
       <div class="toolbar">
-        <label>数据来源 <select id="query-source"><option value="input">原始输入</option><option value="output">格式化输出</option><option value="diff-left">Diff 旧数据</option><option value="diff-right">Diff 新数据</option></select></label>
-        <label class="query-field">JSON 路径 <input id="query-path" class="search-box query-path-input" spellcheck="false" autocomplete="off" placeholder='$.operations[*].content["0x0001"]' aria-label="JSON 查询路径"></label>
+        <label class="control-group"><span class="control-label">数据来源</span><select id="query-source"><option value="input">原始输入</option><option value="output">格式化输出</option><option value="diff-left">Diff 旧数据</option><option value="diff-right">Diff 新数据</option></select></label>
+        <label class="control-group query-field"><span class="control-label">JSON 路径</span><input id="query-path" class="search-box query-path-input" spellcheck="false" autocomplete="off" placeholder='$.operations[*].content["0x0001"]' aria-label="JSON 查询路径"></label>
         <button id="query-run" class="primary">查询 ↵</button>
         <span class="toolbar-spacer"></span>
         <button id="query-copy-all">复制全部结果</button><button id="query-to-output">全部送到输出</button>
@@ -69,7 +69,7 @@
     </section>
     <section id="diff-workspace" hidden>
       <div class="toolbar">
-        <label>类型 <select id="diff-type"><option value="auto">自动识别</option><option value="json">JSON 字段比较</option><option value="xml">XML 行比较</option></select></label>
+        <label class="control-group"><span class="control-label">类型</span><select id="diff-type"><option value="auto">自动识别</option><option value="json">JSON 字段比较</option><option value="xml">XML 行比较</option></select></label>
         <span class="toolbar-spacer"></span><button id="diff-from-input">输入 → 左侧</button><button id="diff-from-output">结果 → 右侧</button>
         <button id="import-left">导入旧文件</button><button id="import-right">导入新文件</button>
         <button id="diff-run" class="primary">开始比较</button>

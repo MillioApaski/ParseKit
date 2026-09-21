@@ -83,7 +83,8 @@
 .editor-wrap.large textarea{white-space:pre;overflow-wrap:normal}
 
 
-/* Compact controls: consistent height, content-driven width. */
+
+/* All four workspaces share a compact toolbar and composite form controls. */
 :root{--toolbar-control-height:36px;--toolbar-control-radius:8px}
 .tabs{gap:4px;padding:4px}
 .tabs .tab{
@@ -92,24 +93,55 @@
   padding:0 12px;border-radius:var(--toolbar-control-radius);
   font-size:12px;line-height:1.2;white-space:nowrap;
 }
-#format-workspace .toolbar{gap:8px;align-items:center}
-#format-workspace .toolbar label{
-  display:inline-flex;align-items:center;gap:8px;
-  height:var(--toolbar-control-height);margin-right:4px;
-  font-size:12px;white-space:nowrap;
-}
-#format-workspace .toolbar select,
-#format-workspace .toolbar > button{
-  box-sizing:border-box;height:var(--toolbar-control-height);
+.toolbar{gap:8px;align-items:center}
+.toolbar > button{
+  display:inline-flex;align-items:center;justify-content:center;
+  box-sizing:border-box;flex:0 0 auto;width:auto;min-width:0;
+  height:var(--toolbar-control-height);padding:0 12px;
   border-radius:var(--toolbar-control-radius);
   font-size:12px;line-height:1.2;white-space:nowrap;
 }
-#format-workspace .toolbar select{padding:0 10px;min-width:0;width:auto}
-#format-workspace .toolbar > button{
-  display:inline-flex;align-items:center;justify-content:center;
-  flex:0 0 auto;width:auto;min-width:0;padding:0 12px;
+.toolbar > button.primary{font-weight:650}
+.toolbar .control-group{
+  display:inline-flex;align-items:center;flex:0 0 auto;
+  gap:0;height:var(--toolbar-control-height);
+  min-width:0;margin:0;padding:0;overflow:hidden;
+  border:1px solid #343d4b;
+  border-radius:var(--toolbar-control-radius);
+  background:#252b36;
+  font-size:12px;white-space:nowrap;
+  transition:background .15s,border-color .15s;
 }
-#format-workspace .toolbar > button.primary{font-weight:650}
+.toolbar .control-group:hover{background:#323b4c;border-color:#51617b}
+.toolbar .control-group:focus-within{
+  outline:2px solid #81a8ff;outline-offset:2px;
+}
+.toolbar .control-label{
+  display:inline-flex;align-items:center;flex:0 0 auto;
+  height:100%;padding:0 10px 0 12px;
+  border-right:1px solid #3c4554;
+  color:#98a9c1;font-size:12px;line-height:1.2;
+}
+.toolbar .control-group > select,
+.toolbar .control-group > input{
+  box-sizing:border-box;height:100%;width:auto;min-width:0;
+  margin:0;padding:0 10px;border:0;border-radius:0;
+  background:transparent;color:#e8edf5;font-size:12px;line-height:1.2;
+}
+.toolbar .control-group > select:hover,
+.toolbar .control-group > select:focus-visible,
+.toolbar .control-group > input:hover,
+.toolbar .control-group > input:focus-visible{
+  background:transparent;border:0;outline:0;
+}
+.toolbar .control-group > input::placeholder{color:#7c899d}
+.toolbar .search-group > input{width:clamp(165px,17vw,250px)}
+#query-workspace .toolbar .query-field{
+  flex:1 1 300px;min-width:200px;
+}
+#query-workspace .toolbar .query-field > input{
+  flex:1 1 auto;width:100%;font-family:"Cascadia Code",Consolas,monospace;
+}
 .heading .shortcut{
   display:inline-flex;align-items:center;justify-content:center;
   height:var(--toolbar-control-height);padding:0 11px;
@@ -117,55 +149,11 @@
 }
 @media(max-width:760px){
   .tabs .tab{min-width:0;padding:0 10px}
-  #format-workspace .toolbar-spacer{flex-basis:100%;height:0}
-  #format-workspace .toolbar > button{flex:0 0 auto;width:auto;min-width:0}
-  #format-workspace .toolbar select{max-width:46vw}
-}
-
-
-/* Compact, unified select groups: label + value share one control surface. */
-#format-workspace .toolbar .control-group {
-  gap:0;
-  height:var(--toolbar-control-height);
-  margin-right:4px;
-  padding:0;
-  overflow:hidden;
-  border:1px solid #343d4b;
-  border-radius:var(--toolbar-control-radius);
-  background:#252b36;
-  transition:background .15s,border-color .15s;
-}
-#format-workspace .toolbar .control-group:hover {
-  background:#323b4c;
-  border-color:#51617b;
-}
-#format-workspace .toolbar .control-group:focus-within {
-  outline:2px solid #81a8ff;
-  outline-offset:2px;
-}
-#format-workspace .toolbar .control-label {
-  display:inline-flex;
-  align-items:center;
-  height:100%;
-  padding:0 10px 0 12px;
-  border-right:1px solid #3c4554;
-  color:#98a9c1;
-  font-size:12px;
-  line-height:1;
-}
-#format-workspace .toolbar label > select {
-  height:100%;
-  width:auto;
-  min-width:0;
-  padding:0 10px;
-  border:0;
-  border-radius:0;
-  background:transparent;
-  color:#e8edf5;
-}
-#format-workspace .toolbar label > select:hover,
-#format-workspace .toolbar label > select:focus-visible {
-  border:0;
-  background:transparent;
-  outline:0;
+  .toolbar-spacer{flex-basis:100%;height:0}
+  .toolbar > button{flex:0 0 auto;width:auto;min-width:0}
+  .toolbar .control-group{max-width:100%}
+  .toolbar .control-group > select{max-width:50vw}
+  #query-workspace .toolbar .query-field{flex-basis:100%;min-width:0}
+  .toolbar .search-group{max-width:100%}
+  .toolbar .search-group > input{width:min(220px,45vw)}
 }
