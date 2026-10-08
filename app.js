@@ -112,8 +112,14 @@ $('copy').addEventListener('click', async () => {
     await navigator.clipboard.writeText(output.value);
     setStatus('已复制到剪贴板');
   } catch {
-    output.focus(); output.select();
+    // Hidden source textarea cannot reliably be selected in all browsers.
+    const temp = document.createElement('textarea');
+    temp.value = output.value;
+    temp.style.cssText = 'position:fixed;left:-9999px;opacity:0';
+    document.body.append(temp);
+    temp.select();
     const success = document.execCommand('copy');
+    temp.remove();
     setStatus(success ? '已复制到剪贴板' : '自动复制不可用，请手动复制', !success);
   }
 });

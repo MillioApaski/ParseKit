@@ -11,6 +11,7 @@
   <script src="app.js" defer></script>
   <script src="inspector.js" defer></script>
   <script src="editor.js" defer></script>
+  <script src="fold-output.js" defer></script>
   <script src="smart-edit.js" defer></script>
   <script src="workspace.js" defer></script>
   <script src="query.js" defer></script>
@@ -42,7 +43,20 @@
       </div>
       <div class="editors">
         <section class="pane"><div class="pane-head"><span><span class="indicator blue"></span> INPUT <small>原始数据</small></span><span class="counter" id="input-count">0 字符</span></div><div class="editor-wrap" data-editor="input"><textarea id="input" aria-label="输入 JSON 或 XML" spellcheck="false" placeholder='在这里粘贴 JSON 或 XML…'></textarea></div></section>
-        <section class="pane"><div class="pane-head"><span><span class="indicator green"></span> OUTPUT <small>处理结果</small></span><span class="counter" id="output-count">0 字符</span></div><div class="editor-wrap" data-editor="output"><textarea id="output" aria-label="处理后的结果" spellcheck="false" readonly placeholder="格式化后的内容会显示在这里…"></textarea></div></section>
+        <section class="pane" id="output-pane">
+          <div class="pane-head output-pane-head">
+            <span><span class="indicator green"></span> OUTPUT <small>处理结果</small></span>
+            <div class="output-head-actions">
+              <span class="counter" id="output-count">0 字符</span>
+              <button id="output-fold-all" type="button" title="折叠所有可折叠结构">全部折叠</button>
+              <button id="output-expand-all" type="button" title="展开全部折叠结构">全部展开</button>
+              <button id="output-plain-toggle" type="button" aria-pressed="false">纯文本</button>
+              <button id="output-maximize" type="button" aria-pressed="false">全屏</button>
+            </div>
+          </div>
+          <div id="output-plain" class="editor-wrap" data-editor="output" hidden><textarea id="output" aria-label="格式化后的完整文本" spellcheck="false" readonly></textarea></div>
+          <div id="output-fold-view" class="fold-view fold-empty" role="region" tabindex="0" aria-label="格式化结果代码视图，可使用行号旁的箭头折叠结构"></div>
+        </section>
       </div>
     </section>
     <section id="tree-workspace" hidden>

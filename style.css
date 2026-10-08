@@ -157,3 +157,35 @@
   .toolbar .search-group{max-width:100%}
   .toolbar .search-group > input{width:min(220px,45vw)}
 }
+
+/* Output pane: scrollable code viewer with recursive JSON/XML folding. */
+.output-pane-head{gap:8px;height:auto;min-height:49px;flex-wrap:wrap;padding:8px 12px}
+.output-head-actions{display:flex;align-items:center;justify-content:flex-end;gap:5px;flex:1 1 auto;flex-wrap:wrap}
+.output-head-actions .counter{white-space:nowrap;margin-right:7px}
+.output-head-actions button{padding:5px 9px;border:1px solid #354153;border-radius:6px;background:#252e3c;color:#bac8dd;font-size:11px;font-weight:500;letter-spacing:0;line-height:1.2;white-space:nowrap}
+.output-head-actions button:hover{background:#34445b;border-color:#516782;color:#fff}
+.output-head-actions button:disabled{opacity:.4;cursor:not-allowed}
+.fold-view{flex:1;min-width:0;min-height:0;position:relative;overflow:auto;background:#181d25;color:#d9e7f5;font:13px/22px "Cascadia Code","JetBrains Mono",Consolas,monospace;overscroll-behavior:contain}
+.fold-view:focus-visible{outline:2px solid #81a8ff;outline-offset:-2px}
+.fold-spacer{height:0;pointer-events:none}
+.fold-rows{width:max-content;min-width:100%}
+.fold-row{display:flex;align-items:center;height:22px;min-width:100%;width:max-content;white-space:pre}
+.fold-row:hover{background:#ffffff08}
+.fold-gutter{position:sticky;left:0;z-index:1;display:flex;align-items:center;flex:0 0 66px;width:66px;height:22px;padding-right:8px;justify-content:flex-end;background:#151b24;color:#65748a;border-right:1px solid #2b3545;user-select:none}
+.fold-row:hover .fold-gutter{background:#1c2633}
+.fold-toggle,.fold-toggle-placeholder{display:inline-flex;align-items:center;justify-content:center;flex:0 0 20px;width:20px;height:20px;margin-right:2px}
+.fold-toggle{padding:0;border:0;border-radius:4px;background:transparent;color:#a2b5d4;font:14px/20px Consolas,monospace;cursor:pointer}
+.fold-toggle:hover{background:#31445e;color:#fff;border:0}
+.fold-line-number{min-width:20px;text-align:right;font-variant-numeric:tabular-nums;font-size:12px}
+.fold-line-code{display:block;flex:1 0 auto;padding:0 22px 0 14px;white-space:pre;tab-size:2;user-select:text;font:inherit}
+.fold-summary{display:inline-block;margin-left:12px;padding:0 8px;background:#32435b;color:#abc8f9;border-radius:5px;font:11px/20px system-ui,sans-serif;vertical-align:middle}
+.fold-placeholder{padding:19px 20px 19px 82px;color:#647186;font:13px/1.7 "Cascadia Code",Consolas,monospace}
+body.output-fullscreen-active{overflow:hidden}
+#output-pane.output-maximized{position:fixed;inset:14px;z-index:1000;width:auto;height:auto;max-height:none;box-shadow:0 25px 80px #000b}
+#output-pane.output-maximized .fold-view{height:100%}
+@media(max-width:760px){
+  .output-pane-head{align-items:flex-start}
+  .output-head-actions{justify-content:flex-start}
+  .output-head-actions button{padding:5px 7px}
+  #output-pane.output-maximized{inset:4px}
+}
