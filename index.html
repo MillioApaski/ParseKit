@@ -50,11 +50,10 @@
               <span class="counter" id="output-count">0 字符</span>
               <button id="output-fold-all" type="button" title="折叠所有可折叠结构">全部折叠</button>
               <button id="output-expand-all" type="button" title="展开全部折叠结构">全部展开</button>
-              <button id="output-plain-toggle" type="button" aria-pressed="false">纯文本</button>
               <button id="output-maximize" type="button" aria-pressed="false">全屏</button>
             </div>
           </div>
-          <div id="output-plain" class="editor-wrap" data-editor="output" hidden><textarea id="output" aria-label="格式化后的完整文本" spellcheck="false" readonly></textarea></div>
+          <textarea id="output" aria-label="格式化后的完整文本（内部数据源）" hidden readonly></textarea>
           <div id="output-fold-view" class="fold-view fold-empty" role="region" tabindex="0" aria-label="格式化结果代码视图，可使用行号旁的箭头折叠结构"></div>
         </section>
       </div>

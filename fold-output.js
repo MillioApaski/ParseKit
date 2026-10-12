@@ -91,18 +91,16 @@ function visibleFoldLines(lineCount, ranges, collapsed) {
 function initFoldedOutput() {
   const source = document.getElementById('output');
   const viewer = document.getElementById('output-fold-view');
-  const plain = document.getElementById('output-plain');
   const pane = document.getElementById('output-pane');
   const controls = {
     collapse: document.getElementById('output-fold-all'),
     expand: document.getElementById('output-expand-all'),
-    plain: document.getElementById('output-plain-toggle'),
     full: document.getElementById('output-maximize')
   };
   const LINE_HEIGHT = 22;
   const OVERSCAN = 22;
   let original = null, lines = [], folds = new Map(), collapsed = new Set(), visible = [];
-  let language = 'json', displayPlain = false, maximized = false;
+  let language = 'json', maximized = false;
   let updateFrame = 0, scrollFrame = 0, lastWindowStart = -1, lastWindowEnd = -1;
   let top = document.createElement('div');
   let bottom = document.createElement('div');
@@ -115,12 +113,8 @@ function initFoldedOutput() {
   function syncControls() {
     controls.collapse.disabled = !folds.size;
     controls.expand.disabled = !collapsed.size;
-    controls.plain.textContent = displayPlain ? '折叠视图' : '纯文本';
-    controls.plain.setAttribute('aria-pressed', String(displayPlain));
     controls.full.textContent = maximized ? '退出全屏' : '全屏';
     controls.full.setAttribute('aria-pressed', String(maximized));
-    plain.hidden = !displayPlain;
-    viewer.hidden = displayPlain;
   }
   function rowFor(lineNumber) {
     const row = document.createElement('div');
@@ -169,7 +163,6 @@ function initFoldedOutput() {
     return row;
   }
   function paint(force = false) {
-    if (displayPlain) return;
     const total = visible.length;
     const first = Math.max(0, Math.floor(viewer.scrollTop / LINE_HEIGHT) - OVERSCAN);
     const last = Math.min(total,
@@ -240,11 +233,6 @@ function initFoldedOutput() {
     collapsed.clear();
     rebuildVisible();
     syncControls();
-  });
-  controls.plain.addEventListener('click', () => {
-    displayPlain = !displayPlain;
-    syncControls();
-    if (!displayPlain) paint(true);
   });
   controls.full.addEventListener('click', () => {
     maximized = !maximized;
