@@ -42,7 +42,11 @@
         <button id="clear" class="quiet">清空</button>
       </div>
       <div class="editors">
-        <section class="pane"><div class="pane-head"><span><span class="indicator blue"></span> INPUT <small>原始数据</small></span><span class="counter" id="input-count">0 字符</span></div><div class="editor-wrap" data-editor="input"><textarea id="input" aria-label="输入 JSON 或 XML" spellcheck="false" placeholder='在这里粘贴 JSON 或 XML…'></textarea></div></section>
+        <section class="pane"><div class="pane-head"><span><span class="indicator blue"></span> INPUT <small>原始数据</small></span><span class="counter" id="input-count">0 字符</span></div><div id="input-error-bar" class="input-error-bar" role="alert" hidden>
+            <button id="input-error-jump" type="button" title="跳转至错误位置">定位错误</button>
+            <span id="input-error-message"></span>
+          </div>
+          <div class="editor-wrap" data-editor="input"><textarea id="input" aria-label="输入 JSON 或 XML" spellcheck="false" placeholder='在这里粘贴 JSON 或 XML…'></textarea></div></section>
         <section class="pane" id="output-pane">
           <div class="pane-head output-pane-head">
             <span><span class="indicator green"></span> OUTPUT <small>处理结果</small></span>

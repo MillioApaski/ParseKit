@@ -77,9 +77,22 @@ function describeJSONError(error, source) {
   const before = source.slice(0, position).split('\n');
   return { position, line: before.length, column: before[before.length - 1].length + 1 };
 }
+function describeXMLError(error, source) {
+  // DOMParser diagnostics may include a location in Chrome / Firefox.
+  const match = /line\s+(\d+)\s*(?:at\s+|[,;:]\s*)?column\s+(\d+)/i.exec(error.message);
+  if (!match) return null;
+  const line = Number(match[1]), column = Number(match[2]);
+  if (!Number.isSafeInteger(line) || !Number.isSafeInteger(column) || line < 1 || column < 1) return null;
+  const lines = source.split('\n');
+  if (line > lines.length) return null;
+  const position = lines.slice(0, line - 1).reduce((n, row) => n + row.length + 1, 0) +
+    Math.min(lines[line - 1].length, column - 1);
+  return { position, line, column };
+}
 function run(mode) {
   const raw = input.value;
   const source = typeOf(raw) === 'json' ? raw : raw.trim();
+  clearInputError();
   if (!raw.trim()) { output.value = ''; updateCounts(); setStatus('请先粘贴 JSON 或 XML', true); return; }
   const type = typeOf(source);
   try {
@@ -93,12 +106,17 @@ function run(mode) {
     $('meta').textContent = type.toUpperCase() + ' · ' + output.value.split('\n').length.toLocaleString() + ' 行';
   } catch (e) {
     output.value = '';
-    const location = type === 'json' ? describeJSONError(e, source) : null;
-    setStatus((location ? '第 ' + location.line + ' 行，第 ' + location.column + ' 列：' : '') + e.message, true);
-    if (location) {
-      input.focus();
-      input.setSelectionRange(location.position, Math.min(source.length, location.position + 1));
+    const location = type === 'json'
+      ? describeJSONError(e, source) : describeXMLError(e, source);
+    // XML input is trimmed for parsing; map offsets back to the displayed input.
+    if (location && source !== raw) {
+      location.position += raw.indexOf(source);
+      const prefix = raw.slice(0, location.position).split('\n');
+      location.line = prefix.length;
+      location.column = prefix[prefix.length - 1].length + 1;
     }
+    showInputError(location, e.message);
+    setStatus((location ? '第 ' + location.line + ' 行，第 ' + location.column + ' 列：' : '') + e.message, true);
     $('meta').textContent = type.toUpperCase() + ' · 校验失败';
   }
   updateCounts();
@@ -125,9 +143,10 @@ $('copy').addEventListener('click', async () => {
 });
 $('swap').addEventListener('click', () => {
   if (!output.value) { setStatus('没有可转入的数据', true); return; }
+  clearInputError();
   input.value = output.value; output.value = ''; updateCounts(); setStatus('已将结果放入输入区'); input.focus();
 });
-$('clear').addEventListener('click', () => { input.value = ''; output.value = ''; updateCounts(); setStatus('准备就绪'); $('meta').textContent = '本地浏览器 · 无依赖'; input.focus(); });
+$('clear').addEventListener('click', () => { clearInputError(); input.value = ''; output.value = ''; updateCounts(); setStatus('准备就绪'); $('meta').textContent = '本地浏览器 · 无依赖'; input.focus(); });
 input.addEventListener('input', updateCounts);
 document.addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); run('format'); } });
 updateCounts();
