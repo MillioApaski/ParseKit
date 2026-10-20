@@ -99,7 +99,6 @@ function createTreeNode(entry, depth = 0) {
     go.addEventListener('click', () => {
       $('query-path').value = entry.path;
       $('query-source').value = $('tree-source').value;
-      window.ParseKitSelects?.refresh('query-source');
       selectView('query');
     });
     row.append(go);

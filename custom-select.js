@@ -20,7 +20,8 @@
 
   function position(instance) {
     if (opened !== instance) return;
-    const rect = instance.button.getBoundingClientRect();
+    // Align the popup to the *whole* labeled control, not just its value button.
+    const rect = instance.group.getBoundingClientRect();
     if (!rect.width || !rect.height) { close(); return; }
     const margin = 8;
     const viewportWidth = document.documentElement.clientWidth;
@@ -29,15 +30,14 @@
 
     menu.style.left = '0px';
     menu.style.top = '0px';
-    menu.style.width = 'max-content';
-    menu.style.maxWidth = Math.max(120, viewportWidth - margin * 2) + 'px';
+    menu.style.width = 'auto';
+    menu.style.maxWidth = Math.max(0, viewportWidth - margin * 2) + 'px';
     menu.style.maxHeight = '264px';
 
-    const width = Math.min(
-      Math.max(rect.width, menu.scrollWidth),
-      viewportWidth - margin * 2
-    );
-    menu.style.width = Math.max(0, width) + 'px';
+    // Match the trigger's outer border width, including the left-hand label.
+    // Only shrink when the viewport itself is narrower than the control.
+    const width = Math.min(rect.width, Math.max(0, viewportWidth - margin * 2));
+    menu.style.width = width + 'px';
     const below = viewportHeight - rect.bottom - margin;
     const above = rect.top - margin;
     const height = Math.min(menu.scrollHeight, 264);
@@ -217,8 +217,18 @@
     labelValue.className = 'pk-select-value';
     const chevron = document.createElement('span');
     chevron.className = 'pk-select-chevron';
-    chevron.textContent = '⌄';
     chevron.setAttribute('aria-hidden', 'true');
+    const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    icon.setAttribute('viewBox', '0 0 24 24');
+    icon.setAttribute('fill', 'none');
+    icon.setAttribute('stroke', 'currentColor');
+    icon.setAttribute('stroke-width', '2');
+    icon.setAttribute('stroke-linecap', 'round');
+    icon.setAttribute('stroke-linejoin', 'round');
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', 'm6 9 6 6 6-6');
+    icon.append(path);
+    chevron.append(icon);
     button.append(labelValue, chevron);
 
     group.append(button);

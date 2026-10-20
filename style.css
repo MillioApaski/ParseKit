@@ -253,15 +253,19 @@ body.output-fullscreen-active{overflow:hidden}
 }
 .pk-select-chevron{
   display:inline-flex;align-items:center;justify-content:center;
-  color:#98aac4;font-size:17px;line-height:1;
-  transform:translateY(-2px);transition:transform .14s ease;
+  flex:0 0 16px;width:16px;height:16px;
+  color:#9cb0cb;line-height:1;
 }
-.pk-select-trigger[aria-expanded="true"] .pk-select-chevron{
-  transform:translateY(1px) rotate(180deg);
+.pk-select-chevron svg{
+  display:block;width:16px;height:16px;
+  transition:transform .16s ease;
+}
+.pk-select-trigger[aria-expanded="true"] .pk-select-chevron svg{
+  transform:rotate(180deg);
 }
 .pk-select-menu{
   box-sizing:border-box;position:fixed;z-index:2100;
-  min-width:152px;max-height:264px;overflow-y:auto;overscroll-behavior:contain;
+  min-width:0;max-height:264px;overflow-y:auto;overscroll-behavior:contain;
   padding:5px;border:1px solid #40516a;border-radius:10px;
   background:#1d2634;box-shadow:0 15px 36px #000a,0 0 0 1px #1a2330;
   color:#dce7f7;scrollbar-color:#536681 transparent;scrollbar-width:thin;
@@ -280,5 +284,5 @@ body.output-fullscreen-active{overflow:hidden}
 .pk-select-check{margin-left:auto;color:#91c3ff;font-size:13px;font-weight:700}
 .pk-select-check[hidden]{display:none!important}
 @media (prefers-reduced-motion:reduce){
-  .pk-select-chevron{transition:none}
+  .pk-select-chevron svg{transition:none}
 }
