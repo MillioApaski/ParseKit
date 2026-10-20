@@ -231,9 +231,9 @@ body.output-fullscreen-active{overflow:hidden}
    Only activated after JS mounts; without JS the native select stays usable. */
 .toolbar .control-group.pk-select-ready{position:relative;gap:0;overflow:visible}
 .toolbar .control-group.pk-select-ready > select.pk-native-select{
-  position:absolute!important;width:1px!important;height:1px!important;
-  opacity:0!important;overflow:hidden!important;clip-path:inset(50%);
-  pointer-events:none!important;padding:0!important;margin:0!important;border:0!important;
+  /* Kept in the DOM as the programmatic value source; the browser must never
+     open its platform-native dropdown over the custom popup. */
+  display:none!important;
 }
 .toolbar .control-group.pk-select-ready > .pk-select-trigger{
   display:inline-flex;align-items:center;justify-content:space-between;gap:13px;
