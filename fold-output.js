@@ -102,13 +102,14 @@ function initFoldedOutput() {
   let original = null, lines = [], folds = new Map(), collapsed = new Set(), visible = [];
   let language = 'json', maximized = false;
   let updateFrame = 0, scrollFrame = 0, lastWindowStart = -1, lastWindowEnd = -1;
-  let top = document.createElement('div');
-  let bottom = document.createElement('div');
+  // Keep the scroll extent independent of the rendered window. Replacing rows
+  // must not move the surrounding content or trigger scroll anchoring.
+  const canvas = document.createElement('div');
+  canvas.className = 'fold-canvas';
   const rows = document.createElement('div');
   rows.className = 'fold-rows';
-  top.className = 'fold-spacer';
-  bottom.className = 'fold-spacer';
-  viewer.replaceChildren(top, rows, bottom);
+  canvas.append(rows);
+  viewer.replaceChildren(canvas);
 
   function syncControls() {
     controls.collapse.disabled = !folds.size;
@@ -164,21 +165,35 @@ function initFoldedOutput() {
   }
   function paint(force = false) {
     const total = visible.length;
-    const first = Math.max(0, Math.floor(viewer.scrollTop / LINE_HEIGHT) - OVERSCAN);
+    if (!total) return;
+    const scrollTop = Math.min(Math.max(0, viewer.scrollTop),
+      Math.max(0, total * LINE_HEIGHT - viewer.clientHeight));
+    const first = Math.max(0, Math.floor(scrollTop / LINE_HEIGHT) - OVERSCAN);
     const last = Math.min(total,
-      Math.ceil((viewer.scrollTop + Math.max(viewer.clientHeight, 440)) / LINE_HEIGHT) + OVERSCAN);
+      Math.ceil((scrollTop + Math.max(viewer.clientHeight, 440)) / LINE_HEIGHT) + OVERSCAN);
     if (!force && first === lastWindowStart && last === lastWindowEnd) return;
     lastWindowStart = first;
     lastWindowEnd = last;
-    top.style.height = first * LINE_HEIGHT + 'px';
-    bottom.style.height = (total - last) * LINE_HEIGHT + 'px';
+    rows.style.top = first * LINE_HEIGHT + 'px';
     const fragment = document.createDocumentFragment();
     for (let k = first; k < last; k++) fragment.append(rowFor(visible[k]));
     rows.replaceChildren(fragment);
   }
   function rebuildVisible(resetScroll = true) {
+    const previousScrollTop = viewer.scrollTop;
     visible = visibleFoldLines(lines.length, folds, collapsed);
-    if (resetScroll) { viewer.scrollTop = 0; viewer.scrollLeft = 0; }
+    // Clear the old render window before changing the virtual extent, otherwise
+    // old rows may briefly extend beyond the newly collapsed document.
+    rows.replaceChildren();
+    rows.style.top = '0px';
+    canvas.style.height = (visible.length ? visible.length * LINE_HEIGHT : 72) + 'px';
+    if (resetScroll) {
+      viewer.scrollTop = 0;
+      viewer.scrollLeft = 0;
+    } else {
+      viewer.scrollTop = Math.min(previousScrollTop,
+        Math.max(0, canvas.offsetHeight - viewer.clientHeight));
+    }
     lastWindowStart = -1;
     lastWindowEnd = -1;
     paint(true);
@@ -196,10 +211,10 @@ function initFoldedOutput() {
       // Reserve horizontal scroll space for the longest line, including offscreen lines.
       let length = 0;
       for (const line of lines) if (line.length > length) length = line.length;
-      rows.style.minWidth = 'max(100%, ' + Math.min(length + 12, 12000) + 'ch)';
+      canvas.style.minWidth = 'max(100%, ' + Math.min(length + 12, 12000) + 'ch)';
     } else {
       viewer.classList.add('fold-empty');
-      rows.style.minWidth = '';
+      canvas.style.minWidth = '';
     }
     rebuildVisible();
     if (!raw) {
@@ -217,13 +232,18 @@ function initFoldedOutput() {
       syncSource();
     });
   }
-  viewer.addEventListener('scroll', () => {
+  function schedulePaint() {
     if (scrollFrame) return;
     scrollFrame = requestAnimationFrame(() => {
       scrollFrame = 0;
       paint();
     });
-  }, { passive: true });
+  }
+  viewer.addEventListener('scroll', schedulePaint, { passive: true });
+  if (typeof ResizeObserver !== 'undefined') {
+    const observer = new ResizeObserver(schedulePaint);
+    observer.observe(viewer);
+  }
   controls.collapse.addEventListener('click', () => {
     collapsed = new Set(folds.keys());
     rebuildVisible();

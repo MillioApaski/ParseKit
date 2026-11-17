@@ -165,10 +165,10 @@
 .output-head-actions button{padding:5px 9px;border:1px solid #354153;border-radius:6px;background:#252e3c;color:#bac8dd;font-size:11px;font-weight:500;letter-spacing:0;line-height:1.2;white-space:nowrap}
 .output-head-actions button:hover{background:#34445b;border-color:#516782;color:#fff}
 .output-head-actions button:disabled{opacity:.4;cursor:not-allowed}
-.fold-view{flex:1;min-width:0;min-height:0;position:relative;overflow:auto;background:#181d25;color:#d9e7f5;font:13px/22px "Cascadia Code","JetBrains Mono",Consolas,monospace;overscroll-behavior:contain}
+.fold-view{flex:1;min-width:0;min-height:0;position:relative;overflow:auto;background:#181d25;color:#d9e7f5;font:13px/22px "Cascadia Code","JetBrains Mono",Consolas,monospace;overscroll-behavior:contain;overflow-anchor:none;scroll-behavior:auto}
 .fold-view:focus-visible{outline:2px solid #81a8ff;outline-offset:-2px}
-.fold-spacer{height:0;pointer-events:none}
-.fold-rows{width:max-content;min-width:100%}
+.fold-canvas{position:relative;min-width:100%;overflow-anchor:none}
+.fold-rows{position:absolute;top:0;left:0;width:max-content;min-width:100%;overflow-anchor:none}
 .fold-row{display:flex;align-items:center;height:22px;min-width:100%;width:max-content;white-space:pre}
 .fold-row:hover{background:#ffffff08}
 .fold-gutter{position:sticky;left:0;z-index:1;display:flex;align-items:center;flex:0 0 66px;width:66px;height:22px;padding-right:8px;justify-content:flex-end;background:#151b24;color:#65748a;border-right:1px solid #2b3545;user-select:none}
